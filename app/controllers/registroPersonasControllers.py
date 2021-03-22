@@ -17,7 +17,7 @@ class RegistroPersonas:
         telefono = content.get('telefono')
         correo = content.get('correo')
         edad = content.get('edad')
-        password = content.get('password')
+        password = content.get('documento')
         jornada = content.get('jornada')
         tipopersona = content.get('tipopersona')
         tipouser = content.get('tipouser')

@@ -6,12 +6,14 @@ import jwt
 
 from app.controllers.tablaIngresosControllers import tablaIngreso
 from app.controllers.registroPersonasControllers import RegistroPersonas
+from app.controllers.ingresoSitemaControllers import Ingresosistema
 
 from app.validators.ingresoValidator import CreateUserSchema, CreateUserFuncionarioSchema
 
 
 userSchema = CreateUserSchema()
 funcionarioSchema = CreateUserFuncionarioSchema()
+ingresoSistema = Ingresosistema()
 
 from app.config.config import KEY_TOKEN_AUTH
 
@@ -108,5 +110,60 @@ def registrar():
     else:
         return jsonify({'status': 'No ha envido ningun token'}),400
 
+
+        
+@app.route('/ingresosistema/<int:documento>', methods=['POST'])
+def ingresosistema(documento):
+    if (request.headers.get('Authorization')):
+        token = request.headers.get('Authorization')
+
+        validar = validarToken(token)
+
+        if (validar):
+
+            documento = str(documento)
+
+            result = ingresoSistema.ingresarSitemas(documento)
+
+            if (result == 0):
+                return jsonify({"status": "No existe el usuario"}),400
+            
+            if (result):
+                return jsonify({"status": "OK"})
+            
+            else:
+                return jsonify({"status": "Error"})
+
+        else:
+            return jsonify({'status': 'error', "message": "Token invalido"}),400
+    else:
+        return jsonify({'status': 'No ha envido ningun token'}),400
+
+
+
+@app.route('/salidaGym/<int:documento>', methods=['POST'])
+def salidaGym(documento):
+    if (request.headers.get('Authorization')):
+        token = request.headers.get('Authorization')
+
+        validar = validarToken(token)
+
+        if (validar):
+
+            documento = str(documento)
+            result = ingresoSistema.salir(documento)
+
+            if (result == 0):
+                return jsonify({"status": "No ha ingresado al sistema hoy"}),400
+
+            if (result):
+                return jsonify({"status": "OK"}),200
+            else:
+                return jsonify({"status": "Error"}),400
+
+        else:
+            return jsonify({'status': 'error', "message": "Token invalido"}),400
+    else:
+        return jsonify({'status': 'No ha envido ningun token'}),400
 
 

@@ -3,7 +3,8 @@ from marshmallow import Schema, fields, validate
 
 class CreateUserSchema(Schema):
 
-    documento = fields.Str(required=True, validate=validate.Length(min=7, max=15), data_key='documento')
+    documento = fields.Str(required=True, validate=validate.Length(
+        min=7, max=15), data_key='documento')
 
     nombres = fields.Str(required=True, validate=validate.Length(
         min=3, max=25), data_key='nombres')
@@ -11,29 +12,33 @@ class CreateUserSchema(Schema):
     apellidos = fields.Str(required=True, validate=validate.Length(
         min=3, max=25), data_key='apellidos')
 
-    pasword = fields.Str(required=True, validate=validate.Length(
-        min=6, max=256), data_key='password')
+    edad = fields.Str(
+        required=True, validate=validate.Length(max=2), data_key='edad')
 
-    edad = fields.Str(required=True, validate=validate.Length( max=2), data_key='edad')
-    
-    correo = fields.Str(required=True, validate=validate.Email(), data_key='correo')
+    correo = fields.Str(
+        required=True, validate=validate.Email(), data_key='correo')
 
-    ficha = fields.Str(required=True, validate=validate.Length(min=6, max=15), data_key='ficha')
+    ficha = fields.Str(required=True, validate=validate.Length(
+        min=6, max=15), data_key='ficha')
 
     idprograma = fields.Str(required=True, data_key='idprograma')
 
-    tipouser = fields.Str(required=True, validate=validate.OneOf(['Aprendiz', 'Funcionario']), data_key='tipouser')
+    tipouser = fields.Str(required=True, validate=validate.OneOf(
+        ['Aprendiz', 'Funcionario']), data_key='tipouser')
 
-    
-    tipopersona = fields.Str(required=True, validate=validate.OneOf(['admin','user']), data_key='tipopersona')
+    tipopersona = fields.Str(required=True, validate=validate.OneOf(
+        ['admin', 'user']), data_key='tipopersona')
 
-    jornada = fields.Str(required=True, validate=validate.Length(min=4, max=10), data_key='jornada')
+    jornada = fields.Str(required=True, validate=validate.Length(
+        min=4, max=10), data_key='jornada')
 
-    telefono = fields.Str(required=True, validate=validate.Length(min=7, max=10), data_key='telefono')
+    telefono = fields.Str(required=True, validate=validate.Length(
+        min=7, max=10), data_key='telefono')
 
 
 class CreateUserFuncionarioSchema(Schema):
-    documento = fields.Str(required=True, validate=validate.Length(min=7, max=15), data_key='documento')
+    documento = fields.Str(required=True, validate=validate.Length(
+        min=7, max=15), data_key='documento')
 
     nombres = fields.Str(required=True, validate=validate.Length(
         min=3, max=25), data_key='nombres')
@@ -41,17 +46,17 @@ class CreateUserFuncionarioSchema(Schema):
     apellidos = fields.Str(required=True, validate=validate.Length(
         min=3, max=25), data_key='apellidos')
 
-    password = fields.Str(required=True, validate=validate.Length(
-        min=6, max=256), data_key='password')
+    edad = fields.Str(
+        required=True, validate=validate.Length(max=2), data_key='edad')
 
-    edad = fields.Str(required=True, validate=validate.Length( max=2), data_key='edad')
-    
-    correo = fields.Str(required=True, validate=validate.Email(), data_key='correo')
+    correo = fields.Str(
+        required=True, validate=validate.Email(), data_key='correo')
 
-    tipouser = fields.Str(required=True, validate=validate.OneOf(['Aprendiz', 'Funcionario']), data_key='tipouser')
-    
-    tipopersona = fields.Str(required=True, validate=validate.OneOf(['admin','user']), data_key='tipopersona')
+    tipouser = fields.Str(required=True, validate=validate.OneOf(
+        ['Aprendiz', 'Funcionario']), data_key='tipouser')
 
-    telefono = fields.Str(required=True, validate=validate.Length(min=7, max=10), data_key='telefono')
+    tipopersona = fields.Str(required=True, validate=validate.OneOf(
+        ['admin', 'user']), data_key='tipopersona')
 
-
+    telefono = fields.Str(required=True, validate=validate.Length(
+        min=7, max=10), data_key='telefono')

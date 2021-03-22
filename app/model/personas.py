@@ -1,5 +1,6 @@
 import psycopg2
 
+
 class Ingresosistema():
 
     def insert(self, nombres, apellidos, documento, ficha, idprograma, telefono, correo, edad, password, jornada, tipopersona, tipouser, fecha):
@@ -10,7 +11,8 @@ class Ingresosistema():
             cursor = conexion.cursor()
 
             sql = "INSERT INTO personas VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
-            datos = (nombres, apellidos, documento, ficha, idprograma, telefono, correo, edad, password, jornada, tipopersona, tipouser, fecha)
+            datos = (nombres, apellidos, documento, ficha, idprograma, telefono,
+                     correo, edad, password, jornada, tipopersona, tipouser, fecha)
 
             cursor.execute(sql, datos)
 
@@ -27,6 +29,7 @@ class Ingresosistema():
             cursor.close()
             conexion.close()
             return status
+
     def datosIngreso(self):
         try:
             conexion = psycopg2.connect(database="dd1o1liu6nsqob", user="gvjdpzhyjsvfxs", password="5ffbbd36b7bf7d3ff6e7edb572b8667da3b15d4396b445f4e705f13c25f8d075",
@@ -36,19 +39,18 @@ class Ingresosistema():
             sql = "select i.idpersona,per.nombres,per.apellidos,per.documento,per.edad,per.ficha,per.jornada,i.fecha,i.horaingreso,i.horasalida from personas per,ingreso i where per.documento=i.documento"
 
             cursor.execute(sql)
-            
+
             consulregistro = cursor.fetchall()
-            Consultas=[]
+            Consultas = []
             for item in consulregistro:
                 items = {"idpersona": item[0], "nombres": item[1], "apellidos": item[2], "documento": item[3],
-                "edad": item[4], "ficha": item[5], "jornada": item[6], "fecha": str(item[7]), 
-                "horaentrada": str(item[8]), "horasalida": str(item[9])}
+                "edad": item[4], "ficha": item[5], "jornada": item[6], "fecha": str(item[7]),
+                         "horaentrada": str(item[8]), "horasalida": str(item[9])}
                 Consultas.append(items)
 
             print(consulregistro)
             conexion.commit()
-                       
-            
+
         except Exception as error:
             print("Error in the connection with the data base", error)
 
@@ -56,7 +58,6 @@ class Ingresosistema():
             cursor.close()
             conexion.close()
             return Consultas
-
 
     def consult(self, documento, correo):
         try:
@@ -88,6 +89,152 @@ class Ingresosistema():
 
         finally:
 
+            cursor.close()
+            conexion.close()
+            return status
+
+    def consultarDocumento(self, documento):
+        try:
+            conexion = psycopg2.connect(database="dd1o1liu6nsqob", user="gvjdpzhyjsvfxs", password="5ffbbd36b7bf7d3ff6e7edb572b8667da3b15d4396b445f4e705f13c25f8d075",
+                                        host="ec2-52-23-190-126.compute-1.amazonaws.com", port="5432")
+
+            cursor = conexion.cursor()
+
+            sql = "SELECT * FROM personas WHERE documento = %s"
+
+            cursor.execute(sql, (documento, ))
+            diccionario = cursor.fetchall()
+            conexion.commit()
+
+            print(diccionario)
+
+            # se examina el len del diccionario despues de la consulta, si es mayor a cero se devuelve true ya que se encuentra repetido
+
+            if len(diccionario) > 0:
+                status = True
+            # caso contrario false
+            else:
+                status = False
+
+        except Exception as error:
+            print("Error in the conetion with the database", error)
+
+            status = False
+
+        finally:
+
+            cursor.close()
+            conexion.close()
+            return status
+
+    def consultaridpersona(self):
+        try:
+            conexion = psycopg2.connect(database="dd1o1liu6nsqob", user="gvjdpzhyjsvfxs", password="5ffbbd36b7bf7d3ff6e7edb572b8667da3b15d4396b445f4e705f13c25f8d075",
+                                        host="ec2-52-23-190-126.compute-1.amazonaws.com", port="5432")
+
+            cursor = conexion.cursor()
+            sql = "SELECT * FROM ingreso "
+
+            cursor.execute(sql)
+
+            consulregistro = cursor.fetchall()
+            consulta = []
+            for item in consulregistro:
+                items = {"id": item[0]}
+                consulta.append(items)
+
+            conexion.commit()
+
+        except Exception as error:
+            print("Error in the connection with the data base", error)
+
+        finally:
+            cursor.close()
+            conexion.close()
+            return consulta
+
+    def insertIngreso(self, id, documento, fecha, horaingreso):
+
+        try:
+            conexion = psycopg2.connect(database="dd1o1liu6nsqob", user="gvjdpzhyjsvfxs", password="5ffbbd36b7bf7d3ff6e7edb572b8667da3b15d4396b445f4e705f13c25f8d075",
+                                        host="ec2-52-23-190-126.compute-1.amazonaws.com", port="5432")
+
+            cursor = conexion.cursor()
+
+            sql = "INSERT INTO ingreso VALUES(%s,%s,%s,%s)"
+
+            datos = (id, fecha, horaingreso, documento)
+
+            cursor.execute(sql, datos)
+
+            conexion.commit()
+
+            status = True
+        except Exception as error:
+            print("Error in the connection with the data base", error)
+
+            status = False
+        finally:
+            cursor.close()
+            conexion.close()
+            return status
+
+    def consultaIngreso(self, documento, fecha):
+
+        try:
+            conexion = psycopg2.connect(database="dd1o1liu6nsqob", user="gvjdpzhyjsvfxs", password="5ffbbd36b7bf7d3ff6e7edb572b8667da3b15d4396b445f4e705f13c25f8d075",
+                                        host="ec2-52-23-190-126.compute-1.amazonaws.com", port="5432")
+
+            cursor = conexion.cursor()
+
+            sql = "SELECT * FROM ingreso WHERE fecha = %s AND documento =%s"
+
+            cursor.execute(sql, (fecha,documento))
+
+            diccionario = cursor.fetchall()
+
+            if len(diccionario) > 0:
+                status = True
+            else:
+                status = False
+
+            conexion.commit()
+
+            status = True
+        except Exception as error:
+            print("Error in the connection with the data base", error)
+
+            status = False
+        finally:
+            cursor.close()
+            conexion.close()
+            return status
+
+
+    def registrarSalida(self,documento,fecha,horasalida):
+        
+        try:
+            conexion = psycopg2.connect(database="dd1o1liu6nsqob", user="gvjdpzhyjsvfxs", password="5ffbbd36b7bf7d3ff6e7edb572b8667da3b15d4396b445f4e705f13c25f8d075",
+                                        host="ec2-52-23-190-126.compute-1.amazonaws.com", port="5432")
+
+            cursor = conexion.cursor()
+
+            sql = "UPDATE ingreso SET horasalida = %s WHERE fecha =%s AND documento = %s"
+
+            documento = (documento)
+            fecha = (fecha)
+            horasalida = (horasalida)
+
+            cursor.execute(sql, (horasalida, fecha, documento,))
+
+            conexion.commit()
+
+            status = True
+        except Exception as error:
+            print("Error in the connection with the data base", error)
+
+            status = False
+        finally:
             cursor.close()
             conexion.close()
             return status
