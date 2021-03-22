@@ -12,6 +12,7 @@ from app.controllers.actualizarPersonaControllers import ActualizacionPersona
 from app.controllers.perfilControllers import Perfil
 from app.controllers.eliminarUsuarioControllers import eliminarUsuario
 from app.controllers.consultarRutinasControllers import ConsultarRutinas
+from app.controllers.enviarCorreoControllers import EnvioCorreos
 
 from app.validators.ingresoValidator import CreateUserSchema, CreateUserFuncionarioSchema
 from app.validators.actualizarValidator import actualizarUserSchema
@@ -25,6 +26,7 @@ actualizarPersona = ActualizacionPersona()
 consultaPerfil = Perfil()
 eliminacionUsuario = eliminarUsuario()
 consultaRutina = ConsultarRutinas()
+envioCorreos = EnvioCorreos()
 
 
 registroPersonas = RegistroPersonas()
@@ -425,4 +427,97 @@ def consultarRutinaAsignada():
             return jsonify({'status': 'error', "message": "Token invalido"}), 400
     else:
         return jsonify({'status': 'No ha envido ningun token'}), 400
+
+
+@app.route('/reporteUsuarios', methods=['GET'])
+def reporteUsuarios():
+    if (request.headers.get('Authorization')):
+        token = request.headers.get('Authorization')
+
+        validar = validarToken(token)
+
+        if (validar):
+            if (validar.get('user') == 'admin'):
+
+                try:
+                    reporte = consultarUsuarios.reporteUsuarios()
+                    return Response(reporte, mimetype="application/ms-excel", headers={"content-Disposition": "attachment; filename=reporteUsuarios.csv"})
+
+                except Exception as error:
+                    Errorjson = str(error)
+                    print(error)
+                    return jsonify({"error": Errorjson})
+
+            else:
+                return jsonify({'status': 'error', "message": "No tiene permisos para entrar a esta pagina"}), 406
+        else:
+            return jsonify({'status': 'error', "message": "Token invalido"}), 400
+    else:
+        return jsonify({'status': 'No ha envido ningun token'}), 400
+
+
+@app.route('/reporteIngreso', methods=['GET'])
+def reporteIngreso():
+    if (request.headers.get('Authorization')):
+        token = request.headers.get('Authorization')
+
+        validar = validarToken(token)
+
+        if (validar):
+            if (validar.get('user') == 'admin'):
+
+                try:
+                    reporte = tablaIngresos.reporteIngreso()
+                    return Response(reporte, mimetype="application/ms-excel", headers={"content-Disposition": "attachment; filename=reporteUsuarios.csv"})
+
+                except Exception as error:
+                    Errorjson = str(error)
+                    print(error)
+                    return jsonify({"error": Errorjson})
+
+            else:
+                return jsonify({'status': 'error', "message": "No tiene permisos para entrar a esta pagina"}), 406
+        else:
+            return jsonify({'status': 'error', "message": "Token invalido"}), 400
+    else:
+        return jsonify({'status': 'No ha envido ningun token'}), 400
+
+
+@app.route('/enviarCorreo', methods=['POST'])
+def enviarCorreo():
+    if (request.headers.get('Authorization')):
+        token = request.headers.get('Authorization')
+
+        validar = validarToken(token)
+
+        if (validar):
+            if (validar.get('user') == 'admin'):
+
+                try:
+
+                    content = request.get_json()
+
+                    correo = validar.get('correo')
+
+                    correo = envioCorreos.enviarCorreos(content, correo)
+
+                    if (correo):
+                        return jsonify({'status': "ok"})
+                    
+                    else:
+                        return jsonify({'status': "bad", "error": correo})
+                except Exception as error:
+                    error = str(error)
+                    return jsonify({'error', error})
+
+                
+            else:
+                return jsonify({'status': 'error', "message": "No tiene permisos para entrar a esta pagina"}), 406
+        else:
+            return jsonify({'status': 'error', "message": "Token invalido"}), 400
+    else:
+        return jsonify({'status': 'No ha envido ningun token'}), 400
+
+            
+
 
