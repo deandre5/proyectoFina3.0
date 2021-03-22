@@ -28,7 +28,6 @@ tablaIngresos = tablaIngreso()
 consultarUsuarios = ConsultaUsuarios()
 
 
-
 app = Flask(__name__)
 
 CORS(app)
@@ -302,42 +301,68 @@ def perfil():
                 consulta = consultaPerfil.consultarPerfil(documento)
 
                 if(consulta):
-                    return jsonify({"status": "OK", "consulta":consulta})
-
+                    return jsonify({"status": "OK", "consulta": consulta})
 
             except Exception as error:
                 tojson = str(error)
                 print(tojson)
                 return jsonify({"status": "no es posible validar", "error": tojson}), 406
 
-            
         else:
             return jsonify({'status': 'error', "message": "Token invalido"}), 400
     else:
         return jsonify({'status': 'No ha envido ningun token'}), 400
 
+
 @app.route('/programas', methods=['GET'])
 def programas():
-        if (request.headers.get('Authorization')):
-            token = request.headers.get('Authorization')
+    if (request.headers.get('Authorization')):
+        token = request.headers.get('Authorization')
 
-            validar = validarToken(token)
+        validar = validarToken(token)
 
-            if (validar):
-                if (validar.get('user') == 'admin'):
+        if (validar):
+            if (validar.get('user') == 'admin'):
 
+                consulta = consultarUsuarios.programas()
 
-                    consulta = consultarUsuarios.programas()
-
-                    if (consulta):
-                        return jsonify({"status": "OK", "consulta":consulta})
-                    
-                    else:
-                        return jsonify({"status": "No hay programas registrados"})
+                if (consulta):
+                    return jsonify({"status": "OK", "consulta": consulta})
 
                 else:
-                    return jsonify({'status': 'error', "message": "No tiene permisos para entrar a esta pagina"}), 406
+                    return jsonify({"status": "No hay programas registrados"})
+
             else:
-                return jsonify({'status': 'error', "message": "Token invalido"}), 400
+                return jsonify({'status': 'error', "message": "No tiene permisos para entrar a esta pagina"}), 406
         else:
-            return jsonify({'status': 'No ha envido ningun token'}), 400
+            return jsonify({'status': 'error', "message": "Token invalido"}), 400
+    else:
+        return jsonify({'status': 'No ha envido ningun token'}), 400
+
+
+@app.route('/cambiarPassword', methods=['PUT'])
+def cambiarPassword():
+    if (request.headers.get('Authorization')):
+        token = request.headers.get('Authorization')
+
+        validar = validarToken(token)
+
+        if (validar):
+
+            correo = validar.get('correo')
+            content = request.get_json()
+
+            actualizarPassword = actualizarPersona.actualizarPassword(
+                correo, content)
+
+            if (actualizarPassword):
+                print(actualizarPassword)
+
+                return jsonify({"status": "OK"}), 200
+            else:
+                return jsonify({"status": str(actualizarPassword)}), 500
+
+        else:
+            return jsonify({'status': 'error', "message": "Token invalido"}), 400
+    else:
+        return jsonify({'status': 'No ha envido ningun token'}), 400

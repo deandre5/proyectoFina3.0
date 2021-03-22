@@ -97,6 +97,31 @@ class ActualizacionPersona():
         return actualizar
 
 
+    def actualizarPassword(self, correo, content):
+
+        verificarCorreo = personas.VerificarCorreoPassword(correo)
+
+        if (verificarCorreo):
+            password = content.get('password')
+            
+
+
+            try:
+                salt = bcrypt.gensalt()
+                hash_password = bcrypt.hashpw(
+                bytes(str(password), encoding='utf-8'), salt)
+                final_password = hash_password.decode()
+
+
+                actualizar = personas.actualizarPassword(correo, final_password)
+
+                if (actualizar):
+                    return True
+                
+            except Exception as Error:
+                return Error
+
+
 
 
 

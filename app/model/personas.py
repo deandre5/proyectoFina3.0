@@ -1,3 +1,4 @@
+from os import stat
 import psycopg2
 
 
@@ -315,7 +316,7 @@ class Ingresosistema():
             # for que nos permite crear un objeto items para luego añadirlo a una lista y devolver su contenido
             for item in diccionario:
                 items = {"nombres": item[0], "apellidos": item[1], "telefono": item[5],
-                         "correo": item[6], "edad": item[7], "imagen": item[15] }
+                         "correo": item[6], "edad": item[7], "imagen": item[15]}
 
             diccionarios.append(items)
 
@@ -328,7 +329,6 @@ class Ingresosistema():
             cursor.close()
             conexion.close()
             return diccionarios
-
 
     def VerificarCorreo(self, correo):
         try:
@@ -364,7 +364,6 @@ class Ingresosistema():
             conexion.close()
             return status
 
-    
     def actualizarPersona(self, documento, correo, nombres, apellidos, telefono, edad, url):
         try:
             conexion = psycopg2.connect(database="dd1o1liu6nsqob", user="gvjdpzhyjsvfxs", password="5ffbbd36b7bf7d3ff6e7edb572b8667da3b15d4396b445f4e705f13c25f8d075",
@@ -382,7 +381,8 @@ class Ingresosistema():
             edad = (edad)
             imagen = (url)
 
-            cursor.execute(sql, (nombres, apellidos, correo, telefono, edad, imagen, documento))
+            cursor.execute(sql, (nombres, apellidos, correo,
+                                 telefono, edad, imagen, documento))
             conexion.commit()
             status = True
 
@@ -392,11 +392,9 @@ class Ingresosistema():
         finally:
             cursor.close()
             conexion.close()
-            return status  
+            return status
 
-
-
-    def programas(self,):
+    def programas(self):
         try:
             conexion = psycopg2.connect(database="dd1o1liu6nsqob", user="gvjdpzhyjsvfxs", password="5ffbbd36b7bf7d3ff6e7edb572b8667da3b15d4396b445f4e705f13c25f8d075",
                                         host="ec2-52-23-190-126.compute-1.amazonaws.com", port="5432")
@@ -408,7 +406,7 @@ class Ingresosistema():
             diccionarios = []
             # for que nos permite crear un objeto items para luego añadirlo a una lista y devolver su contenido
             for item in diccionario:
-                items = {"id": item[0], "programa": item[1] }
+                items = {"id": item[0], "programa": item[1]}
 
             diccionarios.append(items)
 
@@ -421,3 +419,62 @@ class Ingresosistema():
             cursor.close()
             conexion.close()
             return diccionarios
+
+    def actualizarPassword(self, correo, password):
+        try:
+            conexion = psycopg2.connect(database="dd1o1liu6nsqob", user="gvjdpzhyjsvfxs", password="5ffbbd36b7bf7d3ff6e7edb572b8667da3b15d4396b445f4e705f13c25f8d075",
+                                        host="ec2-52-23-190-126.compute-1.amazonaws.com", port="5432")
+            cursor = conexion.cursor()
+
+            sql = "UPDATE personas SET contraseña = %s WHERE correo = %s"
+
+            password = (password)
+            correo = (correo)
+
+            cursor.execute(sql, (password, correo,))
+
+            conexion.commit()
+            status = True
+
+        except Exception as error:
+            print("Error in the conetion with the database", error)
+            status = False
+        finally:
+            cursor.close()
+            conexion.close()
+            return status
+
+
+    def VerificarCorreoPassword(self, correo):
+        try:
+            conexion = psycopg2.connect(database="dd1o1liu6nsqob", user="gvjdpzhyjsvfxs", password="5ffbbd36b7bf7d3ff6e7edb572b8667da3b15d4396b445f4e705f13c25f8d075",
+                                        host="ec2-52-23-190-126.compute-1.amazonaws.com", port="5432")
+
+            cursor = conexion.cursor()
+
+            sql = "SELECT * FROM personas WHERE correo = %s"
+
+            cursor.execute(sql, (correo,))
+            diccionario = cursor.fetchall()
+            conexion.commit()
+
+            print(diccionario)
+
+            # se examina el len del diccionario despues de la consulta, si es mayor a cero se devuelve true ya que se encuentra repetido
+
+            if len(diccionario) >= 1:
+                status = True
+            # caso contrario false
+            else:
+                status = False
+
+        except Exception as error:
+            print("Error in the conetion with the database", error)
+
+            status = False
+
+        finally:
+
+            cursor.close()
+            conexion.close()
+            return status
