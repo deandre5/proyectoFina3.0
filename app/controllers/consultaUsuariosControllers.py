@@ -22,3 +22,12 @@ class ConsultaUsuarios():
         
         else:
             return False
+
+    def programas(self):
+        consulta = personas.programas()
+
+        if (consulta):
+            return consulta
+        
+        else:
+            return False

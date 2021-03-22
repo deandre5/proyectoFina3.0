@@ -9,6 +9,7 @@ from app.controllers.registroPersonasControllers import RegistroPersonas
 from app.controllers.ingresoSitemaControllers import Ingresosistema
 from app.controllers.consultaUsuariosControllers import ConsultaUsuarios
 from app.controllers.actualizarPersonaControllers import ActualizacionPersona
+from app.controllers.perfilControllers import Perfil
 
 from app.validators.ingresoValidator import CreateUserSchema, CreateUserFuncionarioSchema
 from app.validators.actualizarValidator import actualizarUserSchema
@@ -19,11 +20,13 @@ funcionarioSchema = CreateUserFuncionarioSchema()
 actualizarUser = actualizarUserSchema()
 ingresoSistema = Ingresosistema()
 actualizarPersona = ActualizacionPersona()
+consultaPerfil = Perfil()
 
 
 registroPersonas = RegistroPersonas()
 tablaIngresos = tablaIngreso()
 consultarUsuarios = ConsultaUsuarios()
+
 
 
 app = Flask(__name__)
@@ -281,3 +284,60 @@ def actualizar():
             return jsonify({'status': 'error', "message": "Token invalido"}), 400
     else:
         return jsonify({'status': 'No ha envido ningun token'}), 400
+
+
+@app.route('/perfil', methods=['GET'])
+def perfil():
+    if (request.headers.get('Authorization')):
+        token = request.headers.get('Authorization')
+
+        validar = validarToken(token)
+
+        if (validar):
+
+            try:
+
+                documento = validar.get('documento')
+
+                consulta = consultaPerfil.consultarPerfil(documento)
+
+                if(consulta):
+                    return jsonify({"status": "OK", "consulta":consulta})
+
+
+            except Exception as error:
+                tojson = str(error)
+                print(tojson)
+                return jsonify({"status": "no es posible validar", "error": tojson}), 406
+
+            
+        else:
+            return jsonify({'status': 'error', "message": "Token invalido"}), 400
+    else:
+        return jsonify({'status': 'No ha envido ningun token'}), 400
+
+@app.route('/programas', methods=['GET'])
+def programas():
+        if (request.headers.get('Authorization')):
+            token = request.headers.get('Authorization')
+
+            validar = validarToken(token)
+
+            if (validar):
+                if (validar.get('user') == 'admin'):
+
+
+                    consulta = consultarUsuarios.programas()
+
+                    if (consulta):
+                        return jsonify({"status": "OK", "consulta":consulta})
+                    
+                    else:
+                        return jsonify({"status": "No hay programas registrados"})
+
+                else:
+                    return jsonify({'status': 'error', "message": "No tiene permisos para entrar a esta pagina"}), 406
+            else:
+                return jsonify({'status': 'error', "message": "Token invalido"}), 400
+        else:
+            return jsonify({'status': 'No ha envido ningun token'}), 400
