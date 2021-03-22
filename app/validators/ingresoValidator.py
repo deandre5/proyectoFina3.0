@@ -21,13 +21,13 @@ class CreateUserSchema(Schema):
     ficha = fields.Str(required=True, validate=validate.Length(
         min=6, max=15), data_key='ficha')
 
-    idprograma = fields.Str(required=True, data_key='idprograma')
+    idprograma = fields.Integer(required=True, data_key='idprograma')
 
     tipouser = fields.Str(required=True, validate=validate.OneOf(
-        ['Aprendiz', 'Funcionario']), data_key='tipouser')
+        ['admin', 'user']), data_key='tipouser')
 
     tipopersona = fields.Str(required=True, validate=validate.OneOf(
-        ['admin', 'user']), data_key='tipopersona')
+        ['Aprendiz', 'Funcionario']), data_key='tipopersona')
 
     jornada = fields.Str(required=True, validate=validate.Length(
         min=4, max=10), data_key='jornada')

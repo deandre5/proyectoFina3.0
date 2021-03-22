@@ -91,10 +91,10 @@ def registrar():
                 try:
 
                     content = request.get_json()
-                    tipopersona = content.get("tipopersona")
-                    if tipopersona == "Aprendiz":
+                    tipouser = content.get("tipouser")
+                    if tipouser == "Aprendiz":
                         userSchema.load(content)
-                    elif tipopersona == "Funcionario":
+                    elif tipouser == "Funcionario":
                         funcionarioSchema.load(content)
 
                     consulta = registroPersonas.consultar(content)

@@ -23,6 +23,8 @@ class RegistroPersonas:
         tipouser = content.get('tipouser')
         fecha = datetime.datetime.utcnow()
 
+        print(documento, correo, ficha, "*-*-*-*-*-*-*-*-*-*-*-*")
+
         try:
             salt = bcrypt.gensalt()
             hash_password = bcrypt.hashpw(
@@ -43,6 +45,8 @@ class RegistroPersonas:
     def consultar(self, content):
         documento = content.get('documento')
         correo = content.get('correo')
+
+        print(documento, correo)
 
         consulta = personas.consult(documento,correo)
 
