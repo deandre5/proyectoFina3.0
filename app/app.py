@@ -132,19 +132,22 @@ def ingresosistema(documento):
         validar = validarToken(token)
 
         if (validar):
+            if (validar.get('user') == 'admin'):
 
-            documento = str(documento)
+                documento = str(documento)
 
-            result = ingresoSistema.ingresarSitemas(documento)
+                result = ingresoSistema.ingresarSitemas(documento)
 
-            if (result == 0):
-                return jsonify({"status": "No existe el usuario"}), 400
+                if (result == 0):
+                    return jsonify({"status": "No existe el usuario"}), 400
 
-            if (result):
-                return jsonify({"status": "OK"})
+                if (result):
+                    return jsonify({"status": "OK"})
 
+                else:
+                    return jsonify({"status": "Error"})
             else:
-                return jsonify({"status": "Error"})
+                return jsonify({'status': 'error', "message": "No tiene permisos para entrar a esta pagina"}), 406
 
         else:
             return jsonify({'status': 'error', "message": "Token invalido"}), 400
@@ -160,17 +163,21 @@ def salidaGym(documento):
         validar = validarToken(token)
 
         if (validar):
+            if (validar.get('user') == 'admin'):
 
-            documento = str(documento)
-            result = ingresoSistema.salir(documento)
+                documento = str(documento)
+                result = ingresoSistema.salir(documento)
 
-            if (result == 0):
-                return jsonify({"status": "No ha ingresado al sistema hoy"}), 400
+                if (result == 0):
+                    return jsonify({"status": "No ha ingresado al sistema hoy"}), 400
 
-            if (result):
-                return jsonify({"status": "OK"}), 200
+                if (result):
+                    return jsonify({"status": "OK"}), 200
+                else:
+                    return jsonify({"status": "Error"}), 400
+
             else:
-                return jsonify({"status": "Error"}), 400
+                return jsonify({'status': 'error', "message": "No tiene permisos para entrar a esta pagina"}), 406
 
         else:
             return jsonify({'status': 'error', "message": "Token invalido"}), 400
@@ -389,11 +396,10 @@ def elimnarUsuario(documento):
                 eliminar = eliminarUsuario.eliminar(documento)
 
                 if (eliminar):
-                    return jsonify({"status": "OK"}),200
+                    return jsonify({"status": "OK"}), 200
 
                 else:
-                    return jsonify({"status": "No existe el usuario"}),400
-
+                    return jsonify({"status": "No existe el usuario"}), 400
 
             else:
                 return jsonify({'status': 'error', "message": "No tiene permisos para entrar a esta pagina"}), 406
@@ -420,8 +426,6 @@ def consultarRutinaAsignada():
                 return jsonify({'status': 'ok', 'ejercicios': retorno}), 200
             else:
                 return jsonify({'status': 'error'}), 400
-
-            
 
         else:
             return jsonify({'status': 'error', "message": "Token invalido"}), 400
@@ -503,21 +507,16 @@ def enviarCorreo():
 
                     if (correo):
                         return jsonify({'status': "ok"})
-                    
+
                     else:
                         return jsonify({'status': "bad", "error": correo})
                 except Exception as error:
                     error = str(error)
                     return jsonify({'error', error})
 
-                
             else:
                 return jsonify({'status': 'error', "message": "No tiene permisos para entrar a esta pagina"}), 406
         else:
             return jsonify({'status': 'error', "message": "Token invalido"}), 400
     else:
         return jsonify({'status': 'No ha envido ningun token'}), 400
-
-            
-
-
