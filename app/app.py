@@ -10,6 +10,8 @@ from app.controllers.ingresoSitemaControllers import Ingresosistema
 from app.controllers.consultaUsuariosControllers import ConsultaUsuarios
 from app.controllers.actualizarPersonaControllers import ActualizacionPersona
 from app.controllers.perfilControllers import Perfil
+from app.controllers.eliminarUsuarioControllers import eliminarUsuario
+from app.controllers.consultarRutinasControllers import ConsultarRutinas
 
 from app.validators.ingresoValidator import CreateUserSchema, CreateUserFuncionarioSchema
 from app.validators.actualizarValidator import actualizarUserSchema
@@ -21,6 +23,8 @@ actualizarUser = actualizarUserSchema()
 ingresoSistema = Ingresosistema()
 actualizarPersona = ActualizacionPersona()
 consultaPerfil = Perfil()
+eliminacionUsuario = eliminarUsuario()
+consultaRutina = ConsultarRutinas()
 
 
 registroPersonas = RegistroPersonas()
@@ -366,3 +370,59 @@ def cambiarPassword():
             return jsonify({'status': 'error', "message": "Token invalido"}), 400
     else:
         return jsonify({'status': 'No ha envido ningun token'}), 400
+
+
+@app.route('/elimnarUsuario/<int:documento>', methods=['DELETE'])
+def elimnarUsuario(documento):
+    if (request.headers.get('Authorization')):
+        token = request.headers.get('Authorization')
+
+        validar = validarToken(token)
+
+        if (validar):
+            if (validar.get('user') == 'admin'):
+
+                documento = str(documento)
+
+                eliminar = eliminarUsuario.eliminar(documento)
+
+                if (eliminar):
+                    return jsonify({"status": "OK"}),200
+
+                else:
+                    return jsonify({"status": "No existe el usuario"}),400
+
+
+            else:
+                return jsonify({'status': 'error', "message": "No tiene permisos para entrar a esta pagina"}), 406
+        else:
+            return jsonify({'status': 'error', "message": "Token invalido"}), 400
+    else:
+        return jsonify({'status': 'No ha envido ningun token'}), 400
+
+
+@app.route('/consultarRutina', methods=['GET'])
+def consultarRutinaAsignada():
+    if (request.headers.get('Authorization')):
+        token = request.headers.get('Authorization')
+
+        validar = validarToken(token)
+
+        if (validar):
+
+            id = validar.get('rutina')
+
+            retorno = consultaRutina.consultar(id)
+
+            if retorno:
+                return jsonify({'status': 'ok', 'ejercicios': retorno}), 200
+            else:
+                return jsonify({'status': 'error'}), 400
+
+            
+
+        else:
+            return jsonify({'status': 'error', "message": "Token invalido"}), 400
+    else:
+        return jsonify({'status': 'No ha envido ningun token'}), 400
+
