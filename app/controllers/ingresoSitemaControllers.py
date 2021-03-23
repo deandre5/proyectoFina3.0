@@ -6,13 +6,15 @@ UTC = pytz.utc
 
 IST = pytz.timezone('America/Atikokan')
 
-now = datetime.now(IST)
+
 
 personas = Ingresosistema()
 
 
 class Ingresosistema():
     def ingresarSitemas(self, documento):
+
+        now = datetime.now(IST)
 
         consulta = personas.consultarDocumento(documento)
 
@@ -45,6 +47,8 @@ class Ingresosistema():
 
 
     def salir(self, documento):
+
+        now = datetime.now(IST)
 
         fecha = str(now.year)+"-"+str(now.month)+"-"+str(now.day)
 
