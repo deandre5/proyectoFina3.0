@@ -408,7 +408,7 @@ class Ingresosistema():
             for item in diccionario:
                 items = {"id": item[0], "programa": item[1]}
 
-            diccionarios.append(items)
+                diccionarios.append(items)
 
             conexion.commit()
 
