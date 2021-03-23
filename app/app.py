@@ -15,12 +15,13 @@ from app.controllers.consultarRutinasControllers import ConsultarRutinas
 from app.controllers.enviarCorreoControllers import EnvioCorreos
 
 from app.validators.ingresoValidator import CreateUserSchema, CreateUserFuncionarioSchema
-from app.validators.actualizarValidator import actualizarUserSchema
+from app.validators.actualizarValidator import actualizarUserSchema, actualizarUserSinFotoSchema
 
 
 userSchema = CreateUserSchema()
 funcionarioSchema = CreateUserFuncionarioSchema()
 actualizarUser = actualizarUserSchema()
+actualizarSinFoto = actualizarUserSinFotoSchema()
 ingresoSistema = Ingresosistema()
 actualizarPersona = ActualizacionPersona()
 consultaPerfil = Perfil()
@@ -73,9 +74,9 @@ def tablaingresos():
             else:
                 return jsonify({'status': 'error', "message": "No tiene permisos para entrar a esta pagina"}), 406
         else:
-            return jsonify({'status': 'error', "message": "Token invalido"}),406
+            return jsonify({'status': 'error', "message": "Token invalido"}), 406
     else:
-        return jsonify({'status': 'No ha envido ningun token'}),406
+        return jsonify({'status': 'No ha envido ningun token'}), 406
 
 
 @app.route('/registrarusuario', methods=['POST'])
@@ -114,7 +115,7 @@ def registrar():
 
                 except Exception as error:
                     Errorjson = str(error)
-                    return jsonify({"error": Errorjson}),500
+                    return jsonify({"error": Errorjson}), 500
 
             else:
                 return jsonify({'status': 'error', "message": "No tiene permisos para entrar a esta pagina"}), 406
@@ -142,10 +143,10 @@ def ingresosistema(documento):
                     return jsonify({"status": "No existe el usuario"}), 400
 
                 if (result):
-                    return jsonify({"status": "OK"}),200
+                    return jsonify({"status": "OK"}), 200
 
                 else:
-                    return jsonify({"status": "Error"}),500
+                    return jsonify({"status": "Error"}), 500
             else:
                 return jsonify({'status': 'error', "message": "No tiene permisos para entrar a esta pagina"}), 406
 
@@ -253,11 +254,10 @@ def actualizar():
             try:
                 content = request.form
 
-                validacion = actualizarUser.load(content)
-
                 documento = validar.get('documento')
 
                 if len(request.files) > 0:
+                    validacion = actualizarUser.load(content)
                     file = request.files['imagen']
 
                     actualizar = actualizarPersona.actualizarFoto(
@@ -274,9 +274,10 @@ def actualizar():
                     if actualizar:
                         return jsonify({"status": "OK"}), 200
                     else:
-                        return jsonify({"status": "Error, no existe la persona a actualizar"}),400
+                        return jsonify({"status": "Error, no existe la persona a actualizar"}), 400
 
                 else:
+                    validacion = actualizarSinFoto.load(content)
                     actualizar = actualizarPersona.actualizar(
                         documento, content)
 
@@ -286,7 +287,7 @@ def actualizar():
                     if (actualizar):
                         return jsonify({"status": "OK"}), 200
                     else:
-                        return jsonify({"status": "Error, no existe la persona a actualizar", }),400
+                        return jsonify({"status": "Error, no existe la persona a actualizar", }), 400
             except Exception as error:
                 tojson = str(error)
                 print(tojson)
@@ -314,7 +315,7 @@ def perfil():
                 consulta = consultaPerfil.consultarPerfil(documento)
 
                 if(consulta):
-                    return jsonify({"status": "OK", "consulta": consulta}),200
+                    return jsonify({"status": "OK", "consulta": consulta}), 200
 
             except Exception as error:
                 tojson = str(error)
@@ -340,10 +341,10 @@ def programas():
                 consulta = consultarUsuarios.programas()
 
                 if (consulta):
-                    return jsonify({"status": "OK", "consulta": consulta}),200
+                    return jsonify({"status": "OK", "consulta": consulta}), 200
 
                 else:
-                    return jsonify({"status": "No hay programas registrados"}),400
+                    return jsonify({"status": "No hay programas registrados"}), 400
 
             else:
                 return jsonify({'status': 'error', "message": "No tiene permisos para entrar a esta pagina"}), 406
@@ -445,12 +446,12 @@ def reporteUsuarios():
 
                 try:
                     reporte = consultarUsuarios.reporteUsuarios()
-                    return Response(reporte, mimetype="application/ms-excel", headers={"content-Disposition": "attachment; filename=reporteUsuarios.csv"}),200
+                    return Response(reporte, mimetype="application/ms-excel", headers={"content-Disposition": "attachment; filename=reporteUsuarios.csv"}), 200
 
                 except Exception as error:
                     Errorjson = str(error)
                     print(error)
-                    return jsonify({"error": Errorjson}),500
+                    return jsonify({"error": Errorjson}), 500
 
             else:
                 return jsonify({'status': 'error', "message": "No tiene permisos para entrar a esta pagina"}), 406
@@ -477,7 +478,7 @@ def reporteIngreso():
                 except Exception as error:
                     Errorjson = str(error)
                     print(error)
-                    return jsonify({"error": Errorjson}),500
+                    return jsonify({"error": Errorjson}), 500
 
             else:
                 return jsonify({'status': 'error', "message": "No tiene permisos para entrar a esta pagina"}), 406
@@ -506,13 +507,13 @@ def enviarCorreo():
                     correo = envioCorreos.enviarCorreos(content, correo)
 
                     if (correo):
-                        return jsonify({'status': "ok"}),200
+                        return jsonify({'status': "ok"}), 200
 
                     else:
-                        return jsonify({'status': "bad", "error": correo}),400
+                        return jsonify({'status': "bad", "error": correo}), 400
                 except Exception as error:
                     error = str(error)
-                    return jsonify({'error', error}),500
+                    return jsonify({'error', error}), 500
 
             else:
                 return jsonify({'status': 'error', "message": "No tiene permisos para entrar a esta pagina"}), 406
