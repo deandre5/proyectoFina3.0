@@ -33,4 +33,4 @@ class actualizarUserSinFotoSchema(Schema):
     telefono = fields.Str(required=True, validate=validate.Length(
         min=7, max=10), data_key='telefono')
 
-    imagen = fields.Str(required=True)
+    url = fields.Str(required=True, data_key='url')
