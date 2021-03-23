@@ -155,7 +155,7 @@ def ingresosistema(documento):
         return jsonify({'status': 'No ha envido ningun token'}), 400
 
 
-@app.route('/salidaGym/<int:documento>', methods=['POST'])
+@app.route('/salidaGym/<int:documento>', methods=['PUT'])
 def salidaGym(documento):
     if (request.headers.get('Authorization')):
         token = request.headers.get('Authorization')
