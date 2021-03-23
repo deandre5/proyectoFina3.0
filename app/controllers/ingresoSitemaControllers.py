@@ -1,11 +1,12 @@
 from app.model.personas import Ingresosistema
 from datetime import datetime
-from dateutil import tz
+import pytz
 
-from_zone = tz.gettz('UTC')
-to_zone = tz.gettz('America/Atikokan')
+UTC = pytz.utc
 
-now = datetime.utcfromtimestamp(to_zone)
+IST = pytz.timezone('America/Atikokan')
+
+now = datetime.now(IST)
 
 personas = Ingresosistema()
 
