@@ -73,7 +73,7 @@ class ActualizacionPersona():
             status = int(0)
             return status
 
-    def actualizar(self, documento, content, file):
+    def actualizar(self, documento, content):
         consulta = personas.ConsultaId(documento)
 
         if (len(consulta) < 1):
