@@ -1,5 +1,6 @@
 from app.model.personas import Ingresosistema
-import datetime
+from datetime import datetime
+now = datetime.now()
 
 personas = Ingresosistema()
 
@@ -20,8 +21,11 @@ class Ingresosistema():
             # si no hay ejercicios registrados, este toma el valor de 1
             else:
                 id_bd = 1
-            fecha = datetime.datetime.utcnow()
-            horaingreso = str(fecha.hour)+":"+str(fecha.minute)
+            fecha = str(now.year)+"-"+str(now.month)+"-"+str(now.day)
+            print(fecha,"*-*-*-*-*-*-*-*-*-*-*-")
+            horaingreso = str(now.hour)+":"+str(now.minute)
+
+            print(horaingreso,"*-*-*-*-*-*-**-*")
 
             insert = personas.insertIngreso(
                 id_bd, documento, fecha, horaingreso)
@@ -38,18 +42,15 @@ class Ingresosistema():
 
     def salir(self, documento):
 
-        fecha = datetime.datetime.utcnow()
-        dia = fecha.day
-        mes = fecha.month
-        anio = fecha.year
+        fecha = str(now.year)+"-"+str(now.month)+"-"+str(now.day)
 
         consultaIngreso = personas.consultaIngreso(documento,fecha)
 
         if (consultaIngreso):
 
-            horasalida = str(fecha.hour)+":"+str(fecha.minute)
+            horasalida =  str(now.hour)+":"+str(now.minute)
 
-            fecha = str(anio)+"-"+str(mes)+"-"+str(dia)
+            
 
             registrarSalida = personas.registrarSalida(documento, fecha, horasalida)
 

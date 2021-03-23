@@ -134,7 +134,7 @@ class Ingresosistema():
                                         host="ec2-52-23-190-126.compute-1.amazonaws.com", port="5432")
 
             cursor = conexion.cursor()
-            sql = "SELECT * FROM ingreso "
+            sql = "SELECT * FROM ingreso ORDER BY idpersona ASC"
 
             cursor.execute(sql)
 
@@ -400,7 +400,7 @@ class Ingresosistema():
                                         host="ec2-52-23-190-126.compute-1.amazonaws.com", port="5432")
             cursor = conexion.cursor()
 
-            sql = "SELECT * FROM programas"
+            sql = "SELECT * FROM programas ORDER BY idprograma ASC"
             cursor.execute(sql)
             diccionario = cursor.fetchall()
             diccionarios = []
