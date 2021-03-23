@@ -1,6 +1,11 @@
 from app.model.personas import Ingresosistema
 from datetime import datetime
-now = datetime.now()
+from dateutil import tz
+
+from_zone = tz.gettz('UTC')
+to_zone = tz.gettz('America/Atikokan')
+
+now = datetime.utcfromtimestamp(to_zone)
 
 personas = Ingresosistema()
 
@@ -22,10 +27,8 @@ class Ingresosistema():
             else:
                 id_bd = 1
             fecha = str(now.year)+"-"+str(now.month)+"-"+str(now.day)
-            print(fecha,"*-*-*-*-*-*-*-*-*-*-*-")
             horaingreso = str(now.hour)+":"+str(now.minute)
 
-            print(horaingreso,"*-*-*-*-*-*-**-*")
 
             insert = personas.insertIngreso(
                 id_bd, documento, fecha, horaingreso)
