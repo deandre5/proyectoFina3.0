@@ -299,7 +299,6 @@ def actualizar():
         return jsonify({'status': 'No ha envido ningun token'}), 400
 
 
-
 @app.route('/actualizar/<int:documento>', methods=['PUT'])
 def actualizarID(documento):
     if (request.headers.get('Authorization')):
@@ -554,27 +553,24 @@ def enviarCorreo():
         validar = validarToken(token)
 
         if (validar):
-            if (validar.get('user') == 'admin'):
 
-                try:
+            try:
 
-                    content = request.get_json()
+                content = request.get_json()
 
-                    correo = validar.get('correo')
+                correo = validar.get('correo')
 
-                    correo = envioCorreos.enviarCorreos(content, correo)
+                correo = envioCorreos.enviarCorreos(content, correo)
 
-                    if (correo):
-                        return jsonify({'status': "ok"}), 200
+                if (correo):
+                    return jsonify({'status': "ok"}), 200
 
-                    else:
-                        return jsonify({'status': "bad", "error": correo}), 400
-                except Exception as error:
-                    error = str(error)
-                    return jsonify({'error', error}), 500
+                else:
+                    return jsonify({'status': "bad", "error": correo}), 400
+            except Exception as error:
+                error = str(error)
+                return jsonify({'error', error}), 500
 
-            else:
-                return jsonify({'status': 'error', "message": "No tiene permisos para entrar a esta pagina"}), 406
         else:
             return jsonify({'status': 'error', "message": "Token invalido"}), 400
     else:
