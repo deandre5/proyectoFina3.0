@@ -23,8 +23,6 @@ class RegistroPersonas:
         tipouser = content.get('tipouser')
         fecha = datetime.datetime.utcnow()
 
-        print(documento, correo, ficha, "*-*-*-*-*-*-*-*-*-*-*-*")
-
         try:
             salt = bcrypt.gensalt()
             hash_password = bcrypt.hashpw(
@@ -32,7 +30,7 @@ class RegistroPersonas:
 
             final_password = hash_password.decode()
 
-            registro = personas.insert(nombres, apellidos, documento,ficha, idprograma,telefono,correo,edad,final_password, jornada, tipopersona, tipouser, fecha)
+            registro = personas.insert(nombres, apellidos, documento,ficha, idprograma,telefono,correo,edad,final_password, jornada, tipouser, tipopersona, fecha)
 
             if registro:
                 return True
