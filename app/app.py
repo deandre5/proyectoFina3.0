@@ -299,6 +299,64 @@ def actualizar():
         return jsonify({'status': 'No ha envido ningun token'}), 400
 
 
+
+@app.route('/actualizar/<int:documento>', methods=['PUT'])
+def actualizarID(documento):
+    if (request.headers.get('Authorization')):
+        token = request.headers.get('Authorization')
+
+        validar = validarToken(token)
+
+        if (validar):
+
+            try:
+                content = request.form
+
+                documento = str(documento)
+
+                if len(request.files) > 0:
+                    validacion = actualizarUser.load(content)
+                    file = request.files['imagen']
+
+                    actualizar = actualizarPersona.actualizarFoto(
+                        documento, content, file)
+
+                    if actualizar == 0:
+
+                        return jsonify({"status": "error, ingrese un archivo valido"}), 400
+
+                    if isinstance(actualizar, str):
+
+                        return jsonify({"status": "error, el correo ya esta registrado"}), 400
+
+                    if actualizar:
+                        return jsonify({"status": "OK"}), 200
+                    else:
+                        return jsonify({"status": "Error, no existe la persona a actualizar"}), 400
+
+                else:
+                    validacion = actualizarSinFoto.load(content)
+                    actualizar = actualizarPersona.actualizar(
+                        documento, content)
+
+                    if isinstance(actualizar, str):
+                        return jsonify({"status": "error, el correo ya esta registrado"}), 400
+
+                    if (actualizar):
+                        return jsonify({"status": "OK"}), 200
+                    else:
+                        return jsonify({"status": "Error, no existe la persona a actualizar", }), 400
+            except Exception as error:
+                tojson = str(error)
+                print(tojson)
+                return jsonify({"status": "no es posible validar", "error": tojson}), 406
+
+        else:
+            return jsonify({'status': 'error', "message": "Token invalido"}), 400
+    else:
+        return jsonify({'status': 'No ha envido ningun token'}), 400
+
+
 @app.route('/perfil', methods=['GET'])
 def perfil():
     if (request.headers.get('Authorization')):
