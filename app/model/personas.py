@@ -37,7 +37,7 @@ class Ingresosistema():
                                         host="ec2-52-23-190-126.compute-1.amazonaws.com", port="5432")
             cursor = conexion.cursor()
 
-            sql = "select i.idpersona,per.nombres,per.apellidos,per.documento,per.edad,per.ficha,per.jornada,i.fecha,i.horaingreso,i.horasalida from personas per,ingreso i where per.documento=i.documento"
+            sql = "select i.idingreso,per.nombres,per.apellidos,per.documento,per.edad,per.ficha,per.jornada,i.fecha,i.horaingreso,i.horasalida from personas per,ingreso i where per.documento=i.documento"
 
             cursor.execute(sql)
 
@@ -134,7 +134,7 @@ class Ingresosistema():
                                         host="ec2-52-23-190-126.compute-1.amazonaws.com", port="5432")
 
             cursor = conexion.cursor()
-            sql = "SELECT * FROM ingreso ORDER BY idpersona ASC"
+            sql = "SELECT * FROM ingreso ORDER BY idingreso ASC"
 
             cursor.execute(sql)
 
@@ -168,6 +168,13 @@ class Ingresosistema():
 
             cursor.execute(sql, datos)
 
+            sql = "UPDATE personas SET idingreso = %s WHERE documento = %s"
+
+            idingreso = (id)
+            documento = (documento)
+
+            cursor.execute(sql, (idingreso, documento))
+
             conexion.commit()
 
             status = True
@@ -179,6 +186,35 @@ class Ingresosistema():
             cursor.close()
             conexion.close()
             return status
+
+    def idIngreso(self, documento):
+        try:
+            conexion = psycopg2.connect(database="dd1o1liu6nsqob", user="gvjdpzhyjsvfxs", password="5ffbbd36b7bf7d3ff6e7edb572b8667da3b15d4396b445f4e705f13c25f8d075",
+                                        host="ec2-52-23-190-126.compute-1.amazonaws.com", port="5432")
+
+            cursor = conexion.cursor()
+
+            sql = "SELECT idingreso FROM personas WHERE documento = %s"
+
+            cursor.execute(sql, (documento,))
+
+            diccionario = cursor.fetchall()
+
+            diccionarios = []
+
+            for item in diccionario:
+                items = {"idingreso": item[0]}
+                diccionarios.append(items)
+
+            conexion.commit()
+
+        except Exception as error:
+            print(error)
+
+        finally:
+            cursor.close()
+            conexion.close()
+            return diccionarios
 
     def consultaIngreso(self, documento, fecha):
 
@@ -211,7 +247,7 @@ class Ingresosistema():
             conexion.close()
             return status
 
-    def registrarSalida(self, documento, fecha, horasalida):
+    def registrarSalida(self, idingreso, horasalida):
 
         try:
             conexion = psycopg2.connect(database="dd1o1liu6nsqob", user="gvjdpzhyjsvfxs", password="5ffbbd36b7bf7d3ff6e7edb572b8667da3b15d4396b445f4e705f13c25f8d075",
@@ -219,13 +255,13 @@ class Ingresosistema():
 
             cursor = conexion.cursor()
 
-            sql = "UPDATE ingreso SET horasalida = %s WHERE fecha =%s AND documento = %s"
+            sql = "UPDATE ingreso SET horasalida = %s WHERE idingreso =%s "
 
-            documento = (documento)
-            fecha = (fecha)
+            idingreso = (idingreso,)
+
             horasalida = (horasalida)
 
-            cursor.execute(sql, (horasalida, fecha, documento,))
+            cursor.execute(sql, (horasalida, idingreso,))
 
             conexion.commit()
 
@@ -444,7 +480,6 @@ class Ingresosistema():
             conexion.close()
             return status
 
-
     def VerificarCorreoPassword(self, correo):
         try:
             conexion = psycopg2.connect(database="dd1o1liu6nsqob", user="gvjdpzhyjsvfxs", password="5ffbbd36b7bf7d3ff6e7edb572b8667da3b15d4396b445f4e705f13c25f8d075",
@@ -479,7 +514,6 @@ class Ingresosistema():
             conexion.close()
             return status
 
-
     def remove(self, documento):
         try:
             conexion = psycopg2.connect(database="dd1o1liu6nsqob", user="gvjdpzhyjsvfxs", password="5ffbbd36b7bf7d3ff6e7edb572b8667da3b15d4396b445f4e705f13c25f8d075",
@@ -501,7 +535,6 @@ class Ingresosistema():
             cursor.close()
             conexion.close()
             return status
-
 
     def consultarIDR(self, id):
         try:
@@ -558,7 +591,6 @@ class Ingresosistema():
             conexion.close()
             return status
 
-
     def Email(self, correo):
         try:
             conexion = psycopg2.connect(database="dd1o1liu6nsqob", user="gvjdpzhyjsvfxs", password="5ffbbd36b7bf7d3ff6e7edb572b8667da3b15d4396b445f4e705f13c25f8d075",
@@ -568,7 +600,7 @@ class Ingresosistema():
 
             sql = "SELECT nombres, apellidos FROM personas WHERE correo = %s"
 
-            cursor.execute(sql,(correo, ))
+            cursor.execute(sql, (correo, ))
             diccionario = cursor.fetchall()
 
             diccionarios = []
@@ -579,10 +611,8 @@ class Ingresosistema():
 
             conexion.commit()
 
-        
         except Exception as error:
             print("Error in the conetion with the database", error)
-
 
         finally:
 

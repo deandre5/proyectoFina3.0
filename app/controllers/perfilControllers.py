@@ -10,6 +10,6 @@ class Perfil():
 
         if (consulta):
             return consulta
-        
+
         else:
             return False

@@ -7,7 +7,6 @@ UTC = pytz.utc
 IST = pytz.timezone('America/Atikokan')
 
 
-
 personas = Ingresosistema()
 
 
@@ -32,7 +31,6 @@ class Ingresosistema():
             fecha = str(now.year)+"-"+str(now.month)+"-"+str(now.day)
             horaingreso = str(now.hour)+":"+str(now.minute)
 
-
             insert = personas.insertIngreso(
                 id_bd, documento, fecha, horaingreso)
 
@@ -45,22 +43,24 @@ class Ingresosistema():
             status = int(0)
             return status
 
-
     def salir(self, documento):
+
+        idIngreso = personas.idIngreso(documento)
 
         now = datetime.now(IST)
 
         fecha = str(now.year)+"-"+str(now.month)+"-"+str(now.day)
 
-        consultaIngreso = personas.consultaIngreso(documento,fecha)
+        consultaIngreso = personas.consultaIngreso(documento, fecha)
 
         if (consultaIngreso):
 
-            horasalida =  str(now.hour)+":"+str(now.minute)
+            horasalida = str(now.hour)+":"+str(now.minute)
 
-            
+            for i in idIngreso:
+                idingreso = i.get('idingreso')
 
-            registrarSalida = personas.registrarSalida(documento, fecha, horasalida)
+            registrarSalida = personas.registrarSalida(idingreso, horasalida)
 
             if (registrarSalida):
                 return registrarSalida
@@ -71,5 +71,3 @@ class Ingresosistema():
         else:
             status = int(0)
             return status
-
-

@@ -8,7 +8,7 @@ personas = Ingresosistema()
 
 class RegistroPersonas:
 
-    def registrar(self,content):
+    def registrar(self, content):
         nombres = content.get('nombres')
         apellidos = content.get('apellidos')
         documento = content.get('documento')
@@ -30,22 +30,21 @@ class RegistroPersonas:
 
             final_password = hash_password.decode()
 
-            registro = personas.insert(nombres, apellidos, documento,ficha, idprograma,telefono,correo,edad,final_password, jornada, tipouser, tipopersona, fecha)
+            registro = personas.insert(nombres, apellidos, documento, ficha, idprograma,
+                                       telefono, correo, edad, final_password, jornada, tipouser, tipopersona, fecha)
 
             if registro:
                 return True
-        
+
         except Exception as Error:
             return Error
 
-        
-    
     def consultar(self, content):
         documento = content.get('documento')
         correo = content.get('correo')
 
         print(documento, correo)
 
-        consulta = personas.consult(documento,correo)
+        consulta = personas.consult(documento, correo)
 
-        return consulta 
+        return consulta

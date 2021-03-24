@@ -61,14 +61,15 @@ class ActualizacionPersona():
 
             filename = str(t)
 
-            cloudinary.uploader.upload(file,public_id=filename)
+            cloudinary.uploader.upload(file, public_id=filename)
             url = cloudinary.utils.cloudinary_url(filename)
 
-            actualizar = personas.actualizarPersona(documento, correo, nombres, apellidos, telefono, edad, url[0])
+            actualizar = personas.actualizarPersona(
+                documento, correo, nombres, apellidos, telefono, edad, url[0])
 
             if (actualizar):
                 return actualizar
-            
+
         else:
             status = int(0)
             return status
@@ -92,10 +93,10 @@ class ActualizacionPersona():
         edad = content['edad']
         imagen = content['url']
 
-        actualizar = personas.actualizarPersona(documento, correo, nombres, apellidos, telefono, edad, imagen)
+        actualizar = personas.actualizarPersona(
+            documento, correo, nombres, apellidos, telefono, edad, imagen)
 
         return actualizar
-
 
     def actualizarPassword(self, correo, content):
 
@@ -103,28 +104,18 @@ class ActualizacionPersona():
 
         if (verificarCorreo):
             password = content.get('password')
-            
-
 
             try:
                 salt = bcrypt.gensalt()
                 hash_password = bcrypt.hashpw(
-                bytes(str(password), encoding='utf-8'), salt)
+                    bytes(str(password), encoding='utf-8'), salt)
                 final_password = hash_password.decode()
 
-
-                actualizar = personas.actualizarPassword(correo, final_password)
+                actualizar = personas.actualizarPassword(
+                    correo, final_password)
 
                 if (actualizar):
                     return True
-                
+
             except Exception as Error:
                 return Error
-
-
-
-
-
-        
-
-

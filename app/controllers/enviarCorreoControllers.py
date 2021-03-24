@@ -5,6 +5,7 @@ from email.mime.text import MIMEText
 
 personas = Ingresosistema()
 
+
 class EnvioCorreos():
     def enviarCorreos(self, content, correo):
 
@@ -19,27 +20,28 @@ class EnvioCorreos():
                 nombre = i.get('nombre')
                 apellidos = i.get('apellidos')
 
-            #credenciales
+            # credenciales
             proveedor_correo = 'smtp.live.com: 587'
             remitente = 'gymsena@hotmail.com'
             password = 'Adsi2021'
-            #conexion a servidor
+            # conexion a servidor
             servidor = smtplib.SMTP(proveedor_correo)
             servidor.starttls()
             servidor.ehlo()
-            #autenticacion
+            # autenticacion
             servidor.login(remitente, password)
-            #mensaje 
-          
+            # mensaje
+
             msg = MIMEMultipart()
-            msg.attach(MIMEText(mensaje+" Enviado por "+nombre+" "+apellidos+" correo: "+correo , 'html'))
+            msg.attach(MIMEText(mensaje+" Enviado por "+nombre +
+                                " "+apellidos+" correo: "+correo, 'html'))
             msg['From'] = remitente
             msg['To'] = remitente
             msg['Subject'] = asunto
-            servidor.sendmail(msg['From'] , msg['To'], msg.as_string())
+            servidor.sendmail(msg['From'], msg['To'], msg.as_string())
 
             return True
-        
+
         except Exception as error:
             print(error)
             return str(error)
