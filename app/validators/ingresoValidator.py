@@ -64,4 +64,4 @@ class CreateUserFuncionarioSchema(Schema):
 
 class ChangePasswordSchema(Schema):
 
-    password = fields.Str(required=True, validate=validate.Length(min=6, max=256), data_key='password')
+    password = fields.Field(required=True, validate=validate.Length(min=6, max=256), data_key='password')

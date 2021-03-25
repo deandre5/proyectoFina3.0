@@ -445,7 +445,7 @@ def cambiarPassword():
             
             except Exception as error:
                 toString = str(error)
-                return jsonify({"status": "No es posible validar", "Error": toString})
+                return jsonify({"status": "No es posible validar", "Error": toString}), 400
 
         else:
             return jsonify({'status': 'error', "message": "Token invalido"}), 400
