@@ -66,7 +66,7 @@ class Ingresosistema():
                                         host="ec2-52-23-190-126.compute-1.amazonaws.com", port="5432")
             cursor = conexion.cursor()
 
-            sql = "select i.idingreso,per.nombres,per.apellidos,per.documento,per.edad,per.ficha,per.jornada,i.fecha,i.horaingreso,i.horasalida from personas per,ingreso i where per.documento=i.documento ORDER BY per.nombres, per.apellidos ASC"
+            sql = "select i.idingreso,per.nombres,per.apellidos,per.documento,per.edad,per.ficha,per.jornada,i.fecha,i.horaingreso,i.horasalida from personas per,ingreso i where per.documento=i.documento ORDER BY i.idingreso, per.nombres, per.apellidos ASC"
 
             cursor.execute(sql)
 
