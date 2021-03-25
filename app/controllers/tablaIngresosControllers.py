@@ -14,7 +14,7 @@ class tablaIngreso():
         return result
 
     def reporteIngreso(self):
-        consulta = ingreso.datosIngreso()
+        consulta = ingreso.datosIngresoReporte()
 
         output = io.BytesIO()
 
