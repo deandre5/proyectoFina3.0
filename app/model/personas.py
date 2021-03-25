@@ -374,14 +374,14 @@ class Ingresosistema():
                                         host="ec2-52-23-190-126.compute-1.amazonaws.com", port="5432")
             cursor = conexion.cursor()
 
-            sql = "SELECT * FROM personas WHERE documento = %s"
+            sql = "SELECT p.nombres, p.apellidos, p.telefono, p.correo, p.edad, p.imagen, t.peso, t.talla, t.imc FROM personas p LEFT JOIN test t ON p.idtest = t.id_test WHERE p.documento = %s"
             cursor.execute(sql, (documento, ))
             diccionario = cursor.fetchall()
             diccionarios = []
             # for que nos permite crear un objeto items para luego añadirlo a una lista y devolver su contenido
             for item in diccionario:
-                items = {"nombres": item[0], "apellidos": item[1], "telefono": item[5],
-                         "correo": item[6], "edad": item[7], "imagen": item[15]}
+                items = {"nombres": item[0], "apellidos": item[1], "telefono": item[2],
+                         "correo": item[3], "edad": item[4], "imagen": item[5], "peso": item[6], "talla":item[7], "imc": item[8]}
 
             diccionarios.append(items)
 
