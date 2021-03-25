@@ -14,7 +14,7 @@ from app.controllers.eliminarUsuarioControllers import eliminarUsuario
 from app.controllers.consultarRutinasControllers import ConsultarRutinas
 from app.controllers.enviarCorreoControllers import EnvioCorreos
 
-from app.validators.ingresoValidator import CreateUserSchema, CreateUserFuncionarioSchema
+from app.validators.ingresoValidator import CreateUserSchema, CreateUserFuncionarioSchema, ChangePasswordSchema
 from app.validators.actualizarValidator import actualizarUserSchema, actualizarUserSinFotoSchema
 
 
@@ -22,6 +22,9 @@ userSchema = CreateUserSchema()
 funcionarioSchema = CreateUserFuncionarioSchema()
 actualizarUser = actualizarUserSchema()
 actualizarSinFoto = actualizarUserSinFotoSchema()
+changePassword = ChangePasswordSchema()
+
+
 ingresoSistema = Ingresosistema()
 actualizarPersona = ActualizacionPersona()
 consultaPerfil = Perfil()
@@ -267,12 +270,12 @@ def actualizar():
 
                         return jsonify({"status": "error, ingrese un archivo valido"}), 400
 
-                    if isinstance(actualizar, str):
+                    if actualizar == 1:
 
                         return jsonify({"status": "error, el correo ya esta registrado"}), 400
 
                     if actualizar:
-                        return jsonify({"status": "OK"}), 200
+                        return jsonify({"status": "OK", "imagen": actualizar}), 200
                     else:
                         return jsonify({"status": "Error, no existe la persona a actualizar"}), 400
 
@@ -285,7 +288,7 @@ def actualizar():
                         return jsonify({"status": "error, el correo ya esta registrado"}), 400
 
                     if (actualizar):
-                        return jsonify({"status": "OK"}), 200
+                        return jsonify({"status": "OK", "imagen": actualizar}), 200
                     else:
                         return jsonify({"status": "Error, no existe la persona a actualizar", }), 400
             except Exception as error:
@@ -324,7 +327,7 @@ def actualizarID(documento):
 
                         return jsonify({"status": "error, ingrese un archivo valido"}), 400
 
-                    if isinstance(actualizar, str):
+                    if actualizar == 1:
 
                         return jsonify({"status": "error, el correo ya esta registrado"}), 400
 
@@ -420,18 +423,29 @@ def cambiarPassword():
 
         if (validar):
 
-            correo = validar.get('correo')
-            content = request.get_json()
+            try:
 
-            actualizarPassword = actualizarPersona.actualizarPassword(
-                correo, content)
+                correo = validar.get('correo')
+                content = request.get_json()
 
-            if (actualizarPassword):
-                print(actualizarPassword)
+                validator = changePassword.load(content)
 
-                return jsonify({"status": "OK"}), 200
-            else:
-                return jsonify({"status": str(actualizarPassword)}), 500
+
+
+
+                actualizarPassword = actualizarPersona.actualizarPassword(
+                    correo, content)
+
+                if (actualizarPassword):
+                    print(actualizarPassword)
+
+                    return jsonify({"status": "OK"}), 200
+                else:
+                    return jsonify({"status": str(actualizarPassword)}), 500
+            
+            except Exception as error:
+                toString = str(error)
+                return jsonify({"status": "No es posible validar", "Error": toString})
 
         else:
             return jsonify({'status': 'error', "message": "Token invalido"}), 400

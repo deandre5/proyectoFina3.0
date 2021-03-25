@@ -60,3 +60,8 @@ class CreateUserFuncionarioSchema(Schema):
 
     telefono = fields.Str(required=True, validate=validate.Length(
         min=7, max=10), data_key='telefono')
+
+
+class ChangePasswordSchema(Schema):
+
+    password = fields.Str(required=True, validate=validate.Length(min=6, max=256), data_key='password')

@@ -35,7 +35,8 @@ class ActualizacionPersona():
         verificarCorreo = personas.VerificarCorreo(correo)
 
         if (verificarCorreo):
-            return 'FALSE'
+            status = int(1)
+            return status
 
         if allowed_file(file.filename):
 
@@ -68,7 +69,7 @@ class ActualizacionPersona():
                 documento, correo, nombres, apellidos, telefono, edad, url[0])
 
             if (actualizar):
-                return actualizar
+                return url[0]
 
         else:
             status = int(0)
@@ -96,7 +97,7 @@ class ActualizacionPersona():
         actualizar = personas.actualizarPersona(
             documento, correo, nombres, apellidos, telefono, edad, imagen)
 
-        return actualizar
+        return imagen
 
     def actualizarPassword(self, correo, content):
 
