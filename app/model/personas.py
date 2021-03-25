@@ -311,7 +311,7 @@ class Ingresosistema():
 
             cursor = conexion.cursor()
 
-            sql = "SELECT p.nombres, p.apellidos, p.documento, p.ficha, pr.nombreprograma, p.telefono, p.correo, p.edad, p.jornada, p.tipopersona, p.tipouser, p.fecha,  p.imagen FROM personas p, programas pr WHERE p.idprograma = pr.idprograma ORDER BY nombres, apellidos ASC"
+            sql = "SELECT p.nombres, p.apellidos, p.documento, p.ficha, pr.nombreprograma, p.telefono, p.correo, p.edad, p.jornada, p.tipopersona, p.tipouser, p.fecha,  p.imagen FROM personas p LEFT JOIN , programas pr ON p.idprograma = pr.idprograma ORDER BY nombres, apellidos ASC"
 
             cursor.execute(sql,)
 
