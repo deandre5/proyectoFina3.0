@@ -101,7 +101,7 @@ def registrar():
                     consulta = registroPersonas.consultar(content)
 
                     if (consulta):
-                        return jsonify({"status": "BAD", "message": 'El correo o el documento ya estan registrados'}), 200
+                        return jsonify({"status": "BAD", "message": 'El correo o el documento ya estan registrados'}), 400
 
                     else:
 
