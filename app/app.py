@@ -284,7 +284,6 @@ def actualizar():
                     actualizar = actualizarPersona.actualizar(
                         documento, content)
 
-
                     if actualizar == 0:
                         return jsonify({"status": "error, el correo ya esta registrado"}), 400
 
@@ -317,15 +316,12 @@ def actualizarID(documento):
 
                 documento = str(documento)
 
-
                 validacion = actualizarSinFoto.load(content)
                 actualizar = actualizarPersona.actualizar(
-                        documento, content)
-
-                
+                    documento, content)
 
                 if actualizar == 0:
-                        return jsonify({"status": "error, el correo ya esta registrado"}), 400
+                    return jsonify({"status": "error, el correo ya esta registrado"}), 400
 
                 if (actualizar):
                     return jsonify({"status": "OK"}), 200
@@ -333,7 +329,7 @@ def actualizarID(documento):
                     return jsonify({"status": "Error, no existe la persona a actualizar", }), 400
             except Exception as error:
                 tojson = str(error)
-                print("EROR",tojson)
+                print("EROR", tojson)
                 return jsonify({"status": "no es posible validar", "error": tojson}), 406
 
         else:

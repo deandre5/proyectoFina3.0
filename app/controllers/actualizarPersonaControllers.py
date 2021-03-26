@@ -6,6 +6,8 @@ import cloudinary.uploader
 import cloudinary.api
 import datetime
 import bcrypt
+from tkinter import *
+
 personas = Ingresosistema()
 
 
@@ -102,6 +104,12 @@ class ActualizacionPersona():
         return imagen
 
     def actualizarPassword(self, correo, content):
+
+
+
+        root = Tk()
+
+        label = Label(root ,text = "Por favor si cambia la contraseña del admin, compartir en el grupo").pack()
 
         verificarCorreo = personas.VerificarCorreoPassword(correo)
 
