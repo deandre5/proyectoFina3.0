@@ -406,6 +406,7 @@ class Ingresosistema():
 
             cursor.execute(sql, (correo,))
             diccionario = cursor.fetchall()
+            print(diccionario, "*-*-*-*-*-*-*-*")
             conexion.commit()
 
             print(diccionario)

@@ -284,7 +284,8 @@ def actualizar():
                     actualizar = actualizarPersona.actualizar(
                         documento, content)
 
-                    if isinstance(actualizar, str):
+
+                    if actualizar == 0:
                         return jsonify({"status": "error, el correo ya esta registrado"}), 400
 
                     if (actualizar):
@@ -316,41 +317,23 @@ def actualizarID(documento):
 
                 documento = str(documento)
 
-                if len(request.files) > 0:
-                    validacion = actualizarUser.load(content)
-                    file = request.files['imagen']
 
-                    actualizar = actualizarPersona.actualizarFoto(
-                        documento, content, file)
-
-                    if actualizar == 0:
-
-                        return jsonify({"status": "error, ingrese un archivo valido"}), 400
-
-                    if actualizar == 1:
-
-                        return jsonify({"status": "error, el correo ya esta registrado"}), 400
-
-                    if actualizar:
-                        return jsonify({"status": "OK"}), 200
-                    else:
-                        return jsonify({"status": "Error, no existe la persona a actualizar"}), 400
-
-                else:
-                    validacion = actualizarSinFoto.load(content)
-                    actualizar = actualizarPersona.actualizar(
+                validacion = actualizarSinFoto.load(content)
+                actualizar = actualizarPersona.actualizar(
                         documento, content)
 
-                    if isinstance(actualizar, str):
+                
+
+                if actualizar == 0:
                         return jsonify({"status": "error, el correo ya esta registrado"}), 400
 
-                    if (actualizar):
-                        return jsonify({"status": "OK"}), 200
-                    else:
-                        return jsonify({"status": "Error, no existe la persona a actualizar", }), 400
+                if (actualizar):
+                    return jsonify({"status": "OK"}), 200
+                else:
+                    return jsonify({"status": "Error, no existe la persona a actualizar", }), 400
             except Exception as error:
                 tojson = str(error)
-                print(tojson)
+                print("EROR",tojson)
                 return jsonify({"status": "no es posible validar", "error": tojson}), 406
 
         else:
@@ -430,9 +413,6 @@ def cambiarPassword():
 
                 validator = changePassword.load(content)
 
-
-
-
                 actualizarPassword = actualizarPersona.actualizarPassword(
                     correo, content)
 
@@ -442,7 +422,7 @@ def cambiarPassword():
                     return jsonify({"status": "OK"}), 200
                 else:
                     return jsonify({"status": str(actualizarPassword)}), 500
-            
+
             except Exception as error:
                 toString = str(error)
                 return jsonify({"status": "No es posible validar", "Error": toString}), 400

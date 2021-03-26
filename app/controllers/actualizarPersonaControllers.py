@@ -1,3 +1,4 @@
+from os import stat
 from app.model.personas import Ingresosistema
 from werkzeug.utils import secure_filename
 import cloudinary
@@ -86,7 +87,8 @@ class ActualizacionPersona():
         verificarCorreo = personas.VerificarCorreo(correo)
 
         if (verificarCorreo):
-            return 'FALSE'
+            status = int(0)
+            return status
 
         nombres = content['nombres']
         apellidos = content['apellidos']
