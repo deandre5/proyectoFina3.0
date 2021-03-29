@@ -17,6 +17,8 @@ from app.controllers.enviarCorreoControllers import EnvioCorreos
 from app.validators.ingresoValidator import CreateUserSchema, CreateUserFuncionarioSchema, ChangePasswordSchema
 from app.validators.actualizarValidator import actualizarUserSchema, actualizarUserSinFotoSchema
 
+from app.helpers.helpers import validarToken
+
 
 userSchema = CreateUserSchema()
 funcionarioSchema = CreateUserFuncionarioSchema()
@@ -41,20 +43,6 @@ consultarUsuarios = ConsultaUsuarios()
 app = Flask(__name__)
 
 CORS(app)
-
-
-def validarToken(headers):
-    token = headers.split(' ')
-
-    try:
-        # se devulve la informacion util del usuario
-        data = jwt.decode(token[1], KEY_TOKEN_AUTH, algorithms=['HS256'])
-        status = True
-        print(data)
-        return data
-    except:
-        status = False
-        return status
 
 
 @app.route('/tablaingresos', methods=['GET'])

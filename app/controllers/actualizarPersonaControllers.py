@@ -1,4 +1,3 @@
-from os import stat
 from app.model.personas import Ingresosistema
 from werkzeug.utils import secure_filename
 import cloudinary
@@ -6,22 +5,16 @@ import cloudinary.uploader
 import cloudinary.api
 import datetime
 import bcrypt
+from app.helpers.helpers import allowed_file
 
 personas = Ingresosistema()
 
-
-ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg'}
 
 cloudinary.config(
     cloud_name='hdjsownnk',
     api_key='926599253344788',
     api_secret='I8rBOy-rnozmrxhNL_Lg7hqtj7s'
 )
-
-
-def allowed_file(filename):
-    return '.' in filename and \
-           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 
 class ActualizacionPersona():
@@ -103,8 +96,6 @@ class ActualizacionPersona():
         return imagen
 
     def actualizarPassword(self, correo, content):
-
-
 
         verificarCorreo = personas.VerificarCorreoPassword(correo)
 
